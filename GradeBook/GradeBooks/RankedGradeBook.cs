@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GradeBook.GradeBooks
@@ -15,13 +16,17 @@ namespace GradeBook.GradeBooks
         {
             if (base.Students.Count < 5)
                 throw new InvalidOperationException();
-            if (averageGrade >= .8)
+
+            var threshold = (int)Math.Ceiling(Students.Count * 0.2);
+            var grades = Students.OrderByDescending(s => s.AverageGrade).Select(s => s.AverageGrade).ToList();
+
+            if (grades[threshold -1] <= averageGrade)
                 return 'A';
-            else if (averageGrade >= .6 && averageGrade < .8)
+            else if (grades[(threshold*2)-1] <= averageGrade)
                 return 'B';
-            else if (averageGrade >= .4 && averageGrade < .6)
+            else if (grades[(threshold*3)-1] <= averageGrade)
                 return 'C';
-            else if (averageGrade >= .2 && averageGrade < .4)
+            else if (grades[(threshold*4)-1] <= averageGrade)
                 return 'D';
             return 'F';
         }
